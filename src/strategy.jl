@@ -62,9 +62,9 @@ function backtest(strat::Strategy; px_trade::Symbol=:Open, px_close::Symbol=:Set
                 if trades[t-1,i] != 0
                     do_trade = true
                     #TODO: fill out this logic with the various order types
-                    order_side = rule.action in (long,buy) ? 1 : rule.action in (short,sell) ? -1 : 0
+                    order_side = rule.action.args[1] == :buy ? 1 : rule.action == :sell ? -1 : 0
                     #TODO: add logic here for the int vs. float argument type to order function
-                    (order_qty,) = rule.args
+                    order_qty = rule.action.args[3]
                     #if isa(order_qty, Int); else FIXME: portfolio adjustment logic; end
                     pos[t] = order_qty * order_side
                     pnl[t] = pos[t] * (close_price[t] - trade_price[t])
