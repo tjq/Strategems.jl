@@ -37,7 +37,7 @@ function generate_trades!(strat::Strategy; args...)::Void
     return nothing
 end
 
-function backtest(strat::Strategy; px_trade::Symbol=:Open, px_close::Symbol=:Settle, verbose::Bool=true)::Dict{String,TS{Float64}}
+function backtest(strat::Strategy; px_trade::Symbol=:AdjOpen, px_close::Symbol=:AdjClose, verbose::Bool=true)::Dict{String,TS{Float64}}
     if isempty(strat.results.trades)
         generate_trades!(strat, verbose=verbose)
     end
