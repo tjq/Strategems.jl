@@ -37,7 +37,7 @@ function generate_trades!(strat::Strategy; args...)::Void
     return nothing
 end
 
-function backtest(strat::Strategy; px_trade::Symbol=:AdjOpen, px_close::Symbol=:AdjClose, verbose::Bool=true)::Dict{String,TS{Float64}}
+function backtest(strat::Strategy; px_trade::Symbol=:Open, px_close::Symbol=:Settle, verbose::Bool=true)::Dict{String,TS{Float64}}
     if isempty(strat.results.trades)
         generate_trades!(strat, verbose=verbose)
     end
@@ -47,6 +47,8 @@ function backtest(strat::Strategy; px_trade::Symbol=:AdjOpen, px_close::Symbol=:
         trades = strat.results.trades[asset].values
         N = size(trades, 1)
         summary_ts = strat.universe.data[asset]
+        summary_ts = TS(summary_ts[[:AdjOpen, :AdjClose]])
+        summary_ts.fields = [:Open, :Settle]
         #TODO: add setindex! method for TS objects using Symbol and Vector to assign inplace
         #TODO: generalize this logic to incorporate order types
         #FIXME: generalize this logic to use the actual rules (this is a temporary quickfix)
